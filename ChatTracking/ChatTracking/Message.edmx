@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище jabberModel" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "jabber.dbo.ofMessageArchive" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="ofMessageArchive">
+          <Key>
+            <PropertyRef Name="conversationID" />
+            <PropertyRef Name="fromJID" />
+            <PropertyRef Name="toJID" />
+            <PropertyRef Name="sentDate" />
+          </Key>
+          <Property Name="conversationID" Type="bigint" Nullable="false" />
+          <Property Name="fromJID" Type="nvarchar" MaxLength="1024" Nullable="false" />
+          <Property Name="toJID" Type="nvarchar" MaxLength="1024" Nullable="false" />
+          <Property Name="sentDate" Type="bigint" Nullable="false" />
+          <Property Name="body" Type="ntext" />
+        </EntityType>
+        <EntityType Name="ofVCard">
+          <Key>
+            <PropertyRef Name="username" />
+          </Key>
+          <Property Name="username" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="vcard" Type="ntext" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="Хранилище jabberModelContainer">
+          <EntitySet Name="ofVCard" EntityType="Self.ofVCard" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ofMessageArchive" EntityType="Self.ofMessageArchive" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ofMessageArchive].[conversationID] AS [conversationID], 
+    [ofMessageArchive].[fromJID] AS [fromJID], 
+    [ofMessageArchive].[toJID] AS [toJID], 
+    [ofMessageArchive].[sentDate] AS [sentDate], 
+    [ofMessageArchive].[body] AS [body]
+    FROM [dbo].[ofMessageArchive] AS [ofMessageArchive]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="jabberModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ofVCard">
+          <Key>
+            <PropertyRef Name="username" />
+          </Key>
+          <Property Name="username" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="vcard" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ofMessageArchive">
+          <Key>
+            <PropertyRef Name="conversationID" />
+            <PropertyRef Name="fromJID" />
+            <PropertyRef Name="toJID" />
+            <PropertyRef Name="sentDate" />
+          </Key>
+          <Property Name="conversationID" Type="Int64" Nullable="false" />
+          <Property Name="fromJID" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="toJID" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="sentDate" Type="Int64" Nullable="false" />
+          <Property Name="body" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="jabberEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ofVCards" EntityType="Self.ofVCard" />
+          <EntitySet Name="ofMessageArchives" EntityType="Self.ofMessageArchive" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище jabberModelContainer" CdmEntityContainer="jabberEntities">
+          <EntitySetMapping Name="ofVCards">
+            <EntityTypeMapping TypeName="jabberModel.ofVCard">
+              <MappingFragment StoreEntitySet="ofVCard">
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="vcard" ColumnName="vcard" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ofMessageArchives">
+            <EntityTypeMapping TypeName="jabberModel.ofMessageArchive">
+              <MappingFragment StoreEntitySet="ofMessageArchive">
+                <ScalarProperty Name="conversationID" ColumnName="conversationID" />
+                <ScalarProperty Name="fromJID" ColumnName="fromJID" />
+                <ScalarProperty Name="toJID" ColumnName="toJID" />
+                <ScalarProperty Name="sentDate" ColumnName="sentDate" />
+                <ScalarProperty Name="body" ColumnName="body" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

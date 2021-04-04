@@ -1,0 +1,9 @@
+ofMessageArchive ([jabber].[dbo].[ofMessageArchive])
+1. fromJID (шумейкоаа@fileserv/RECTOR-PC, sklyar@fileserv/QIP)
+2. toJID (бабкинасв@fileserv/UNI-344000026, павловпю@fileserv/DEK-01360976)
+3. sentDate
+4. body
+
+ofVCard ([jabber].[dbo].[ofVCard])
+1. username (sklyar, tomsuvorov, артюхдн, бузуевоа)
+2. vcard (<vCard xmlns="vcard-temp">...<NICKNAME>Упоров Г.А.</NICKNAME>...</vCard>, <vCard xmlns="vcard-temp">...<NICKNAME>Суворов А.В.</NICKNAME>...</vCard>)

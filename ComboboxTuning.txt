@@ -1,0 +1,3 @@
+comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+comboBox1.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+comboBox1.AutoCompleteSource = AutoCompleteSource.ListItems;
