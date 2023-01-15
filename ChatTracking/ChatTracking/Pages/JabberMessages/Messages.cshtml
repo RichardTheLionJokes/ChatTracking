@@ -1,0 +1,39 @@
+﻿@page
+@model ChatTracking.Pages.JabberMessages.MessagesModel
+@{
+    ViewData["Title"] = "AmGPGU IT";
+    string head = "Messages of " + Model.UserName1 + (!System.String.IsNullOrEmpty(Model.UserName2) ? (" and " + Model.UserName2) : "");
+}
+
+<h2 class="p-4">@head</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Sender</th>
+            <th>Date</th>
+            <th>Message</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.messageList)
+        {
+            <tr>
+                <td>@item.sender</td>
+                <td>@item.date</td>
+                <td>@item.body</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.messagePList.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.messagePList.HasNextPage ? "disabled" : "";
+}
+
+<a class="btn btn-primary @prevDisabled" href="/JabberMessages/Messages?user1=@Model.User1&user2=@Model.User2&pageIndex=@(Model.messagePList.PageIndex - 1)">
+    Previous
+</a>
+<a class="btn btn-primary @nextDisabled" href="/JabberMessages/Messages?user1=@Model.User1&user2=@Model.User2&pageIndex=@(Model.messagePList.PageIndex + 1)">
+    Next
+</a>
