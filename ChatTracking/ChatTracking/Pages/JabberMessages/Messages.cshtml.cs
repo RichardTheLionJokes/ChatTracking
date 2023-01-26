@@ -15,12 +15,12 @@ namespace ChatTracking.Pages.JabberMessages
     {
         private readonly JabberContext context;
         //private readonly IConfiguration Configuration;
-        public string User1 { get; set; }
-        public string User2 { get; set; }
-        public string UserName1 { get; set; }
-        public string UserName2 { get; set; }
+        public string? User1 { get; set; }
+        public string? User2 { get; set; }
+        public string? UserName1 { get; set; }
+        public string? UserName2 { get; set; }
         public List<MessageInfo> messageList = new List<MessageInfo>();
-        public PaginatedList<OfMessageArchive> messagePList { get; set; }
+        public PaginatedList<OfMessageArchive>? messagePList { get; set; }
 
         public MessagesModel(JabberContext db)
         {
@@ -38,16 +38,17 @@ namespace ChatTracking.Pages.JabberMessages
 
             Regex regexUser = new Regex(@"<NICKNAME>(.*?)</NICKNAME>"); //поиск имени пользователя в таблице пользователей
             Regex regexMsg = new Regex(@"(.*?)@fileserv"); //поиск имени пользователя в таблице сообщений
+            string jbSrvName = "@fileserv";
 
             if (!System.String.IsNullOrEmpty(user2))
             {
                 try
                 {
-                    users = context.OfVcards.Where(u => u.Username.StartsWith(user1) || u.Username.StartsWith(user2)).ToList();
-                    messages = context.OfMessageArchives.Where(m => (m.FromJid.StartsWith(user1)
-                    && m.ToJid.StartsWith(user2)) || (m.FromJid.StartsWith(user2)
-                    && m.ToJid.StartsWith(user1))).OrderByDescending(m => m.SentDate);
-                    OfVcard? u2 = users.FirstOrDefault(u => u.Username.StartsWith(user2));
+                    users = context.OfVcards.Where(u => u.Username == user1 || u.Username == user2).ToList();
+                    messages = context.OfMessageArchives.Where(m => (m.FromJid.StartsWith(user1 + jbSrvName)
+                    && m.ToJid.StartsWith(user2 + jbSrvName)) || (m.FromJid.StartsWith(user2 + jbSrvName)
+                    && m.ToJid.StartsWith(user1 + jbSrvName))).OrderByDescending(m => m.SentDate);
+                    OfVcard? u2 = users.FirstOrDefault(u => u.Username == user2);
                     UserName2 = u2 == null ? "" : regexUser.Match(u2.Vcard).Groups[1].ToString();
                 }
                 catch (Exception ex)
@@ -60,8 +61,8 @@ namespace ChatTracking.Pages.JabberMessages
                 try
                 {
                     users = context.OfVcards.ToList();
-                    messages = context.OfMessageArchives.Where(m => (m.FromJid.StartsWith(user1)
-                    || m.ToJid.StartsWith(user1))).OrderByDescending(m => m.SentDate);
+                    messages = context.OfMessageArchives.Where(m => (m.FromJid.StartsWith(user1 + jbSrvName)
+                    || m.ToJid.StartsWith(user1 + jbSrvName))).OrderByDescending(m => m.SentDate);
                 }
                 catch (Exception ex)
                 {
@@ -69,7 +70,7 @@ namespace ChatTracking.Pages.JabberMessages
                 }
             }
 
-            OfVcard? u1 = users.FirstOrDefault(u => u.Username.StartsWith(user1));
+            OfVcard? u1 = users.FirstOrDefault(u => u.Username==user1);
             UserName1 = u1 == null ? "" : regexUser.Match(u1.Vcard).Groups[1].ToString();
 
             try
@@ -84,20 +85,20 @@ namespace ChatTracking.Pages.JabberMessages
             foreach (OfMessageArchive message in messagePList)
             {
                 MessageInfo messageInfo = new MessageInfo();
-                string? FromJid = "";
+                string FromJid = "";
                 if (!System.String.IsNullOrEmpty(user2))
                 {
-                    FromJid = message.FromJid.StartsWith(user1) ? UserName1 : UserName2;
+                    FromJid = message.FromJid.StartsWith(user1 + jbSrvName) ? UserName1 : UserName2;
                 }
                 else
                 {
-                    if (message.FromJid.StartsWith(user1))
+                    if (message.FromJid.StartsWith(user1 + jbSrvName))
                     {
                         FromJid = UserName1;
                     }
                     else
                     {
-                        OfVcard? sender = users.FirstOrDefault(u => message.FromJid.StartsWith(u.Username));
+                        OfVcard? sender = users.FirstOrDefault(u => message.FromJid.StartsWith(u.Username + jbSrvName));
                         FromJid = sender == null ? regexMsg.Match(message.FromJid).Groups[1].ToString() : regexUser.Match(sender.Vcard).Groups[1].ToString();
                     }
                 }
@@ -116,8 +117,8 @@ namespace ChatTracking.Pages.JabberMessages
 
         public class MessageInfo
         {
-            public string sender;
-            public string date;
+            public string? sender;
+            public string? date;
             public string? body;
         }
     }

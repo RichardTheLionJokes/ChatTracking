@@ -78,7 +78,7 @@ namespace ChatTracking.Pages.JabberMessages
 
     public class UserInfo
     {
-        public string username;
-        public string name;
+        public string? username;
+        public string? name;
     }
 }
